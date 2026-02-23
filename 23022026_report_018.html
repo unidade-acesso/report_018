@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Relatório Casa Pia (website)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #000;
+      color: white;
+      padding: 8px;
+      z-index: 100;
+      transition: top 0.3s ease;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+    .visually-hidden-focusable:not(:focus):not(:focus-within) {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0,0,0,0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+    .container {
+      max-width: 900px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .status-ok { 
+      color: #ffffff; 
+      background-color: #0E8A16; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: 50px;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .status-nok { 
+      color: #ffffff; 
+      background-color: #B60205; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: 50px;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .status-melhoria { 
+      color: #856404; 
+      background-color: #fff3cd; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: 50px;
+      font-weight: 500;
+      display: inline-block;
+    }
+        .status-na {
+      color: #000;
+      background-color: #C2E0C6; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: 50px;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .requirement-title { 
+      margin-top: 2rem; 
+    }
+    .requirement-title h4,
+    .requirement-title h3 {
+      color: #000;
+    }
+    .mb-4 ul li a {
+      color: #1e3a8a;
+      text-decoration: none;
+    }
+    .mb-4 ul li a:hover {
+      color: #1e40af;
+      text-decoration: underline;
+    }
+
+    /* Índice (summary) com maior destaque visual e acessível */
+    summary.index-summary {
+      display: list-item; /* manter marcador nativo */
+      font-weight: 700;
+      font-size: 1.25rem !important; /* aumentar o texto */
+      color: #000;
+      padding-left: 0; /* sem recuo extra */
+      border-left: none; /* sem borda lateral */
+      border-radius: 0;
+      cursor: pointer;
+    }
+    summary.index-summary:hover {
+      background-color: transparent; /* sem fundo ao hover */
+    }
+    summary.index-summary:focus {
+      outline: 3px solid #333399;
+      outline-offset: 2px;
+    }
+    /* Aumentar o tamanho da seta nativa (compatibilidade ampla) */
+    summary.index-summary::marker {
+      font-size: 1em;
+    }
+    summary.index-summary::-webkit-details-marker {
+      font-size: 1em;
+    }
+
+    .evidence-list { 
+      list-style-type: disc; 
+      padding-left: 1.5rem; 
+      margin: 1rem 0; 
+    }
+    .evidence-item { 
+      margin: 0.5rem 0; 
+      padding: 0.5rem 0.5rem 0.5rem 1.5rem; 
+      border-radius: 4px;
+      background-color: #f6f6f6;
+      color: #000;
+      margin-left: -1.5rem;
+      list-style-position: inside;
+      list-style: none;
+    }
+    
+    
+    .evidence-item p {
+      margin: 1.5rem 0 1rem 0;
+    }
+    
+
+    .evidence-labels {
+      font-size: 0.85em;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .label-tag {
+      padding: 0.125rem 0.375rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: white;
+      display: inline-block;
+      margin-right: 0.25rem;
+    }
+    .label-checklist { background-color: #5319E7; }
+    .label-auto { background-color: #5319E7; }
+    .label-declaracao { background-color: #5319E7; }
+    .label-outras { background-color: #5319E7; }
+    .label-melhoria { background-color: #FBCA04; color: #000; }
+    .label-na { background-color: #C2E0C6; color: #000; }
+    .label-ok { background-color: #0E8A16; }
+    .label-nok { background-color: #B60205; }
+    .label-requisito { background-color: #0052CC; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    #checklist-10-aspetos {
+      margin-top: 3.5rem !important;
+    }
+    .report-section {
+      border-bottom: 3px solid #000000;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+    .report-section:last-child {
+      border-bottom: none;
+    }
+    .avaliacao-manual-section:last-child {
+      border-bottom: none;
+    }
+    .checklist-section {
+      border-bottom: 3px solid #000000;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .avaliacao-manual-section {
+      border-bottom: 1px solid #000000;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .checklist-section:last-child {
+      border-bottom: none;
+    }
+
+    #avaliacao-manual {
+      border-bottom: 1px solid #000000 !important;
+    }
+    /* Tabelas: caption por cima */
+    table.table caption {
+      caption-side: top;
+      text-align: left;
+      padding-bottom: 0.5rem;
+      font-weight: 600;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <a href="#conteudo-principal" class="skip-link visually-hidden-focusable">Saltar para o conteúdo principal</a>
+  <div class="container mt-4" id="conteudo-principal">
+    <header class="mb-4">
+      <h1>Relatório Avaliação da Candidatura da Casa Pia (website)</h1>
+    </header>
+
+    <section class="mb-4">
+      <ul>
+        <li>Avaliação feita por: ARTE. I.P. - Núcleo de Experiência e Usabilidade</li>
+        <li>Data de criação: 23/02/2026</li>
+        <li>Última atualização: 23/02/2026</li>
+        <li>URL: <a href="https://casapia.pt/" target="_blank" rel="noopener noreferrer">https://casapia.pt/</a></li>
+        <li>Propriedade: Casa Pia</li>
+        <li>Candidatura: Bronze</li>
+          <li>Progresso (% de requisitos auditados): 100%</li>
+      </ul>
+    </section>
+
+
+
+    <nav class="mb-4 report-section" aria-label="Índice">
+      <details open>
+        <summary class="index-summary">Índice</summary>
+        <ul>
+          <li><a href="#introducao">Introdução</a></li>
+          <li><a href="#declaracao">Declaração de Acessibilidade</a></li>
+          <li><a href="#avaliacao-automatica">Avaliação automática</a></li>
+          
+          <li><a href="#avaliacao-manual">Avaliação manual</a>
+            <ul class="indent-list">
+              
+              <li><a href="#checklist-10-aspetos">Checklist 10 aspetos</a>
+                <ul class="indent-list">
+                  <li><a href="#req-chk10-r-1.2">Requisito 1.2 - É possível selecionar as opções e as subopções do menu quer com rato quer com teclado</a></li><li><a href="#req-chk10-r-1.3">Requisito 1.3 - As imagens-link, caso existam no menu, devem ter o correspondente equivalente alternativo em texto</a></li><li><a href="#req-chk10-r-2.1">Requisito 2.1 - Existe um título &lt;h1&gt; marcado na página</a></li><li><a href="#req-chk10-r-2.2">Requisito 2.2 - Existe uma marcação hierarquizada de títulos e subtítulos na página (&lt;h1&gt;...&lt;h6&gt;)</a></li><li><a href="#req-chk10-r-3.1">Requisito 3.1 - As células que constituem os cabeçalhos da tabela estão marcadas com o elemento &lt;th&gt;</a></li><li><a href="#req-chk10-r-3.2">Requisito 3.2 - A legenda da tabela está marcada com o elemento &lt;caption&gt;</a></li><li><a href="#req-chk10-r-4.1">Requisito 4.1 - Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição</a></li><li><a href="#req-chk10-r-4.2">Requisito 4.2 - É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã</a></li><li><a href="#req-chk10-r-4.3">Requisito 4.3 - É possível localizar e ler as mensagens de erro usando apenas um leitor de ecrã</a></li><li><a href="#req-chk10-r-5.1">Requisito 5.1 - A imagem ou gráfico tem um equivalente alternativo em texto curto e correto</a></li><li><a href="#req-chk10-r-5.2">Requisito 5.2 - O gráfico é acompanhado de uma descrição longa</a></li><li><a href="#req-chk10-r-5.3">Requisito 5.3 - As imagens-link têm um equivalente alternativo correto</a></li><li><a href="#req-chk10-r-6.1">Requisito 6.1 - No corpo de um documento, o rácio de contraste entre a cor do texto normal (menor que 18 pontos ou menor que 14 pontos negrito) e a cor do fundo é superior a 4,5:1</a></li><li><a href="#req-chk10-r-7.2">Requisito 7.2 - O vídeo ou o áudio deve conter preferencialmente legendas fechadas sincronizadas. Caso não seja possível, no mínimo, deve disponibilizar-se uma transcrição textual</a></li><li><a href="#req-chk10-r-8.3">Requisito 8.3 - Quando se retira a CSS, deve ser possível reconhecer a semântica dos diversos elementos</a></li><li><a href="#req-chk10-r-9.1">Requisito 9.1 - Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo</a></li><li><a href="#req-chk10-r-9.2">Requisito 9.2 - Quando uma caixa de diálogo está aberta, a navegação com teclado (Browser ou Tecnologia de apoio) tem de ficar circunscrita aos elementos que compõem a caixa de diálogo</a></li><li><a href="#req-chk10-r-9.3">Requisito 9.3 - A caixa de diálogo tem de ter um mecanismo que permita sair ou fechar a caixa, quer através de teclado quer através de um dispositivo apontador</a></li><li><a href="#req-chk10-r-9.4">Requisito 9.4 - Quando a caixa de diálogo fecha, o foco (cursor do Browser) deve voltar ao elemento interativo que a invocou</a></li>
+                </ul>
+              </li>
+              
+              <li><a href="#checklist-conteudo">Checklist Conteúdo</a>
+                <ul class="indent-list">
+                  <li><a href="#req-conteudo-r-1.1">Requisito 1.1 - O sítio Web apresenta um resumo breve do seu propósito, visível sem se fazer scroll</a></li><li><a href="#req-conteudo-r-1.2">Requisito 1.2 - Os termos mais complexos têm uma definição agregada</a></li><li><a href="#req-conteudo-r-1.3">Requisito 1.3 - Cada bloco de conteúdo contém a sua data de atualização</a></li><li><a href="#req-conteudo-r-1.4">Requisito 1.4 - A informação sobre a entidade responsável pelo conteúdo está em todas as páginas</a></li><li><a href="#req-conteudo-r-2.2">Requisito 2.2 - A informação secundária (datas, autores) utiliza, no mínimo, um tamanho de letra de 10 pontos</a></li><li><a href="#req-conteudo-r-2.3">Requisito 2.3 - Blocos e linhas de texto com largura não superior a 100 caracteres</a></li><li><a href="#req-conteudo-r-2.4">Requisito 2.4 - O espaçamento entre linhas não é inferior a 1.5x o tamanho da letra</a></li><li><a href="#req-conteudo-r-3.1">Requisito 3.1 - Nenhum nível de navegação tem mais de 9 opções</a></li><li><a href="#req-conteudo-r-4.1">Requisito 4.1 - Os documentos longos têm um índice no topo com hiperligações internas para o mesmo</a></li><li><a href="#req-conteudo-r-4.2">Requisito 4.2 - O layout do sítio Web é adaptável a plataformas móveis sem necessidade de efetuar varrimento horizontal</a></li><li><a href="#req-conteudo-r-5.2">Requisito 5.2 - Os elementos interativos têm uma dimensão mínima de 44px CSS (44 pontos) (vertical e horizontal)</a></li><li><a href="#req-conteudo-r-5.4">Requisito 5.4 - Elementos gráficos interativos têm de aparentar ser clicáveis</a></li>
+                </ul>
+              </li>
+              
+              
+            </ul>
+          </li>
+          
+          <li><a href="#etiquetas">Significado das etiquetas utilizadas</a></li>
+        </ul>
+      </details>
+    </nav>
+
+         <section id="introducao" class="mb-5 report-section">
+       <h2 id="req-introducao">Introdução</h2>
+      <p>O website <a href="https://casapia.pt/" target="_blank">https://casapia.pt/</a> <strong><span class="status-nok"><span class="sr-only">etiqueta: </span>não passa</span></strong> nos requisitos mínimos do Selo de Usabilidade e Acessibilidade.</p>
+      
+      <table class="table table-bordered">
+        <caption>Estado das avaliações efetuadas</caption>
+        <thead>
+          <tr>
+            <th>Tipo de avaliação</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Avaliação Automática</td>
+            <td><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></td>
+          </tr>
+          <tr>
+            <td>Avaliação Manual</td>
+            <td><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      
+      <p>Das avaliações manuais efetuadas obtiveram-se os resultados que se sintetizam na tabela seguinte.</p>
+      <table class="table table-bordered">
+        <caption>Níveis de conformidade das avaliações manuais</caption>
+        <thead>
+          <tr>
+            <th>Checklist</th>
+            <th>Conformidade alcançada</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10 aspetos</td>
+            <td>52.6% (10/19)</td>
+            <td><span class="status-nok"><span class="sr-only">etiqueta: </span>Não passa</span></td>
+          </tr>
+          
+          <tr>
+            <td>Conteúdo</td>
+            <td>37.5% (6/16)</td>
+            <td><span class="status-nok"><span class="sr-only">etiqueta: </span>Não passa</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+      
+      <p><strong>Nota:</strong> para passar os requisitos do Selo é necessário alcançar um nível de conformidade superior ou igual a 75% em cada uma das 3 checklists.</p>
+      
+      <p>Verificámos também que a Declaração de Acessibilidade não se encontra corretamente afixada. Consulte o capítulo "Declaração de acessibilidade" para saber o que tem de corrigir.</p>
+    </section>
+
+              
+     <section id="declaracao" class="mb-5 report-section">
+       <h2 id="req-declaracao-declaracao-de-acessibilidade">Declaração de Acessibilidade</h2>
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+       <p>De acordo com o <a href="https://www.acessibilidade.gov.pt/blogue/categoria-acessibilidade/dl-n-o-83-2018-acessibilidade-dos-sitios-web-e-das-aplicacoes-moveis/#n8" target="_blank" rel="noopener noreferrer">artigo 8º do DL n.º 83/2018</a>, todos os sítios web e todas as aplicações móveis têm de ostentar uma Declaração de Acessibilidade. A Declaração é o documento na qual a organização evidencia o trabalho levado a efeito para tornar os seus conteúdos e serviços digitais mais acessíveis, disponibilizando ainda contactos para ajuda adicional.</p>
+      
+       <p>Lista de evidências recolhidas:</p>
+       <ul class="evidence-list">
+         
+             <li class="evidence-item">
+               <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/2" target="_blank" rel="noopener noreferrer">issue#2</a> <strong>Declaração de acessibilidade - Garantir formato machine-readable</strong></p>
+               <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-declaracao"><span class="sr-only">etiqueta: </span>dec a11y</span></div>
+               <div class="issue-content"><p>Ao submeter novamente o ficheiro da Declaração ao Gerador (<a href="https://www.acessibilidade.gov.pt/gerador/">https://www.acessibilidade.gov.pt/gerador/</a>), este não reconhece a informação, nem preenche os campos automaticamente, o que é sinal de que o formato da Declaração está corrompido.</p>
+<p>Quando se termina o preenchimento da Declaração no Gerador, deve-se descarregar o código HTML e colá-lo numa página do site. Dessa forma, garante-se que a informação da Declaração é machine-readable.</p>
+</div>
+             </li>
+           
+             <li class="evidence-item">
+               <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/1" target="_blank" rel="noopener noreferrer">issue#1</a> <strong>Declaração de acessibilidade - Atualizar os ficheiros das checklists</strong></p>
+               <div class="evidence-labels"><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-declaracao"><span class="sr-only">etiqueta: </span>dec a11y</span></div>
+               <div class="issue-content"><p>É necessário incluir as respectivas evidências em cada checklist enviada junto ao relatório (10 aspectos e de conteúdo) e atualizar a Declaração de Acessibilidade com os respectivos ficheiros.</p>
+</div>
+             </li>
+           
+       </ul>
+     </section>
+
+              
+     <section id="avaliacao-automatica" class="mb-5 report-section">
+       <h2 id="req-automatic-avaliacao-automatica">Avaliação automática</h2>
+       <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+       <p>Para a produção das evidências do presente capítulo, foram utilizadas ferramentas automatizadas de avaliação de requisitos de acessibilidade de acordo com a norma WCAG 2.1 'AA'. A amostra em análise pelas ferramentas é composta pela Homepage mais todas as páginas diretamente hiperligadas por ela, pertencentes ao domínio.</p>
+       
+       <p>Lista de evidências recolhidas:</p>
+       <ul class="evidence-list">
+         
+             <li class="evidence-item">
+               <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/5" target="_blank" rel="noopener noreferrer">issue#5</a> <strong>Avaliação automática - Access Monitor / Observatório</strong></p>
+               <div class="evidence-labels"><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span></div>
+               <div class="issue-content"><p>Analisámos a amostra com o Access Monitor, de acordo com o método Home+, e obteve-se, no total, 60 páginas. Destas, todas as páginas (100%) não cumprem os testes de conformidade ‘AA’ da WCAG:</p>
+<img src="https://github.com/user-attachments/assets/7aa60020-8fda-4d95-a073-692f5cdd71fb" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+</div>
+             </li>
+           
+             <li class="evidence-item">
+               <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/4" target="_blank" rel="noopener noreferrer">issue#4</a> <strong>Existem páginas com pontuação abaixo de 9</strong></p>
+               <div class="evidence-labels"><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span></div>
+               <div class="issue-content"><p>No <a href="https://casapia.pt/">website da Casa Pia</a> foram localizadas 9 páginas com pontuação abaixo de 9:</p>
+<ul>
+<li><a href="https://casapia.pt/category/agenda/">https://casapia.pt/category/agenda/</a> - 8,5</li>
+<li><a href="https://casapia.pt/eventos/">https://casapia.pt/eventos/</a> - 8,5</li>
+<li><a href="https://casapia.pt/casa-pia-de-lisboa/organica/">https://casapia.pt/casa-pia-de-lisboa/organica/</a> - 8,6</li>
+<li><a href="https://casapia.pt/comunicacao-e-media/publicacoes/">https://casapia.pt/comunicacao-e-media/publicacoes/</a> - 8,7</li>
+<li><a href="https://casapia.pt/sobre-cookies/">https://casapia.pt/sobre-cookies/</a> - 8,7</li>
+<li><a href="https://casapia.pt/creche-e-pre-escolar/">https://casapia.pt/creche-e-pre-escolar/</a> - 8,9</li>
+<li><a href="https://casapia.pt/educacao-e-formacao/">https://casapia.pt/educacao-e-formacao/</a> - 8,9</li>
+<li><a href="https://casapia.pt/educacao-e-formacao/ensino-basico/">https://casapia.pt/educacao-e-formacao/ensino-basico/</a> - 8,9</li>
+<li><a href="https://casapia.pt/outras-respostas/fab-cpl/">https://casapia.pt/outras-respostas/fab-cpl/</a>  - 8,9</li>
+</ul>
+<p>Devem corrigir todos os erros de acessibilidade indicados pela <a href="https://accessmonitor.acessibilidade.gov.pt/">ferramenta de análise automática Access Monitor</a>.</p>
+</div>
+             </li>
+           
+             <li class="evidence-item">
+               <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/3" target="_blank" rel="noopener noreferrer">issue#3</a> <strong>Avaliação automática - Rocket Validator</strong></p>
+               <div class="evidence-labels"><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span></div>
+               <div class="issue-content"><p>Efetuámos também uma análise com o validador Rocket Validator que indica a existência de <strong>187</strong> erros de Acessibilidade e que precisam ser corrigidos:</p>
+<img src="https://github.com/user-attachments/assets/5445c5ae-9af2-4c65-80e8-435edbb0e2be" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Análise automática feita pelo Rocket Validator indica 187 erros de acessibilidade em uma amostra de 60 páginas</em></p>
+<p>Para mais informações partilhamos o <a href="https://rocketvalidator.com/s/3a84d4c7-fd53-4e67-94e7-d3cd22b25044">relatório da análise automática feita pelo Rocket Validator</a></p>
+</div>
+             </li>
+           
+       </ul>
+     </section>
+
+         
+     <section id="avaliacao-manual" class="mb-5 mt-5 avaliacao-manual-section">
+       <h2 id="req-avaliacao-manual">Avaliação manual</h2>
+       <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+       <p>A avaliação manual é feita por inspeção perícial dos diversos requisitos constantes da:</p>
+       <ul>
+         <li>checklist <strong>10 aspetos críticos de acessibilidade funcional</strong>;</li>
+         <li>checklist <strong>Conteúdo</strong> (se candidato a Selo Bronze);</li>
+         
+       </ul>
+       <p>Sempre que os auditores localizam uma falha grave de um requisito de acessibilidade que, embora não faça parte do esquema de requisitos do Selo, se enquadre no âmbito das violações das WCAG 2.1 'AA' do W3C, tal referência é anotada em "Outras violações" do presente capítulo. Apesar destas violações não se apresentarem com carácter vinculativo no esquema de requisitos do Selo, recomenda-se que as mesmas sejam corrigidas.</p>
+
+      
+      <div class="checklist-section">
+        <h3 id="checklist-10-aspetos">Checklist 10 aspetos</h3>
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        
+    <p><strong>Nível de conformidade:</strong></p>
+    <ul>
+      <li><strong>Checklist 10 aspetos</strong>: 52.6% (10/19)
+        <ul>
+          <li>Requisitos avaliados: 27 (8 N/A excluídos, 19 aplicáveis)</li>
+          <li>Requisitos OK: 10</li>
+          <li>Requisitos NOK: 9</li>
+          <li>Requisitos N/A: 8</li>
+        </ul>
+      </li>
+    </ul>
+    
+        
+        <h4 class="requirement-title" id="req-chk10-r-1.2">Requisito 1.2 - É possível selecionar as opções e as subopções do menu quer com rato quer com teclado</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/8" target="_blank" rel="noopener noreferrer">issue#8</a> <strong>Não é possível identificar quais opções contém subopções com o leitor de ecrã</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível selecionar as opções e as subopções do menu quer com rato quer com teclado.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n12">Ver requisito 1.2 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<p>Ao navegar com o leitor de ecrã no menu principal, não é anunciado quando a opção de primeiro nível está aberta ou fechada:</p>
+<img src="https://github.com/user-attachments/assets/e68158ff-da6a-4797-9d73-500472bcc687" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Leitor de ecrã não anuncia que a opção &quot;Casa Pia de Lisboa&quot; está fechada</em></p>
+<img src="https://github.com/user-attachments/assets/0562f891-06f3-4f8c-bf89-de9af26ebd89" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>A opção de primeiro nível &quot;Casa Pia de Lisboa&quot; possui 10 opções</em></p>
+<p>Recomendamos rever a construção do menu para garantir que o leitor de ecrã identifique corretamente as opções que contêm subopções, e informe se estas se encontram abertas ou fechadas. Para tal, é necessário utilizar o atributo <code>aria-expanded</code>, em conjunto com JavaScript, de modo a gerir o estado de abertura e fecho dessas opções.</p>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/7" target="_blank" rel="noopener noreferrer">issue#7</a> <strong>Não é possível distinguir o menu principal de outros menus de navegação com o leitor de ecrã</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível selecionar as opções e as subopções do menu quer com rato quer com teclado.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n12">Ver requisito 1.2 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<p>O uso de landmarks é fundamental para permitir que os utilizadores realizem saltos entre as diferentes secções de uma página. No entanto, verifica-se que atualmente não é possível identificar o menu principal como uma área de navegação.<br>Isso acontece porque a tag <code>nav</code>, responsável por indicar semanticamente uma navegação, está aplicada apenas às opções internas do menu, ou seja, quando o menu se encontra fechado, o mesmo não é reconhecido como uma navegação pelas tecnologias de apoio. Para além disso, é possível identificar uma nav dentro de outra nav, que é o caso das redes sociais:</p>
+<img src="https://github.com/user-attachments/assets/2679701f-2f6f-4dc9-80f1-ccb9eac6cdd5" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Quando o menu é aberto é possível identificar as opções como uma navegação. É possível identificar que existe uma nav dentro de outra nav que pertence as redes sociais</em></p>
+<img src="https://github.com/user-attachments/assets/68a5aacf-1142-4113-a547-062e27f43b1d" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Estruturalmente é possível identificar que o botão de abrir/fechar menu está fora da landmark nav</em></p>
+<img src="https://github.com/user-attachments/assets/10cdcc9c-3058-4854-b0c2-310f059bf359" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Quando o menu está fechado, ele não é reconhecido como uma navegação</em></p>
+<p>Para além disso, é possível identificar 3 navegações com o leitor de ecrã: redes sociais, opções do rodapé, e o menu lateral (navegação):</p>
+<img src="https://github.com/user-attachments/assets/4027cb91-6df4-4f02-9087-a846f7051d31" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Para garantir a correta atribuição da landmark nav nos menus de navegação, e assegurar uma experiência de utilização e acessibilidade adequada, recomendamos que sejam consideradas as seguintes orientações:</p>
+<ul>
+<li>No menu principal, deve ser removido o nav das redes sociais. Assim garantimos que não exista uma nav dentro de outra nav. As redes sociais e o texto &quot;A CONSTRUIR FUTUROS DESDE 1780&quot; devem estar estruturalmente fora da nav do menu principal de navegação.</li>
+<li>O botão de abrir/fechar o menu deverá estar incluído dentro da mesma nav que contém as respetivas opções de navegação.</li>
+<li>Ao integrar o botão dentro da nav, ela ficará permanentemente visível para tecnologias de apoio. Tendo em conta que existem três nav na página, é necessário diferenciá-las. Por exemplo, o menu principal poderá ser identificado como “Menu principal Casa Pia”, enquanto o menu lateral deverá ser nomeado de acordo com a sua função específica (não pode estar sem nome).</li>
+<li>Para evitar redundância de termos e melhorar a clareza, sugerimos ainda a renomeação das navegações do rodapé:<ul>
+<li>“Menu Rodapé” deverá passar a “Opções do rodapé”;</li>
+<li>“Menu Redes Sociais” deverá ser simplificado para “Redes sociais”.</li>
+</ul>
+</li>
+</ul>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-1.3">Requisito 1.3 - As imagens-link, caso existam no menu, devem ter o correspondente equivalente alternativo em texto</h4>
+      <div class="requirement-content">
+        <p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/9" target="_blank" rel="noopener noreferrer">issue#9</a> <strong>Não existem imagens-link no menu</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>As imagem-link, caso existam no menu, devem ter o correspondente equivalente alternativo em texto.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n13">Ver requisito 1.3 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<p>Ao corrigir as notas levantadas na issue #7  o menu principal não fará uso de imagens-link. E esse critério passa a ser considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-2.1">Requisito 2.1 - Existe um título &lt;h1&gt; marcado na página</h4>
+      <div class="requirement-content">
+        <p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/10" target="_blank" rel="noopener noreferrer">issue#10</a> <strong>O h1 não está atrelado ao logotipo na homepage</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe um título <code>&lt;h1&gt;</code> marcado na página.</p>
+<ul>
+<li><a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n21">Ver requisito 2.1 da lista 10 aspetos</a></li>
+</ul>
+</blockquote>
+<p>Na página inicial do website, o cabeçalho h1 está oculto visualmente e não está atrelado ao logotipo:</p>
+<img src="https://github.com/user-attachments/assets/55a351d8-f223-45e1-a835-a76584743cdf" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Estruturalmente é possível identificar o h1 e a imagem do logotipo como dois elementos separados</em></p>
+<p>Sugerimos atribuir o cabeçalho h1 a um elemento que represente a página e que também esteja visível, nesse caso o logotipo.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-2.2">Requisito 2.2 - Existe uma marcação hierarquizada de títulos e subtítulos na página (&lt;h1&gt;...&lt;h6&gt;)</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/16" target="_blank" rel="noopener noreferrer">issue#16</a> <strong>Existem páginas com cabeçalhos mal atribuídos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe uma marcação hierarquizada de títulos e subtítulos na página <code>&lt;h1&gt;...&lt;h6&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n22">ver requisito 2.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página <a href="https://casapia.pt/creche-e-pre-escolar/">Creche e Pré-Escolar</a>, verifica-se que os títulos “Creche” e “Pré-Escolar” estão definidos como cabeçalhos h2. No entanto, os respectivos acordeões encontram-se igualmente definidos como h2, quando deveriam estar estruturados como h3:</p>
+<img src="https://github.com/user-attachments/assets/48943f2f-9f15-4f98-828a-86ee6ac01752" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Os títulos dos acordeões estão estruturados como h2</em></p>
+<p>Isso acontece em outras páginas do website e por esse motivo devem rever todo o website: </p>
+<ul>
+<li><a href="https://casapia.pt/educacao-e-formacao/ensino-basico/">https://casapia.pt/educacao-e-formacao/ensino-basico/</a></li>
+<li><a href="https://casapia.pt/creche-e-pre-escolar/">https://casapia.pt/creche-e-pre-escolar/</a></li>
+<li><a href="https://casapia.pt/educacao-e-formacao/ensino-basico/">https://casapia.pt/educacao-e-formacao/ensino-basico/</a></li>
+</ul>
+<p>Recomendamos que os títulos dos acordeões sejam definidos como cabeçalhos de nível h3. </p>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/15" target="_blank" rel="noopener noreferrer">issue#15</a> <strong>A hierarquia de cabeçalhos não está visível para as tecnologias de apoio</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><p>O uso de cabeçalhos permite o utilizador realizar saltos por entre as secções de conteúdo da página, facilitando a navegação e procura por um conteúdo. </p>
+<p>No entanto, verifica-se, de forma generalizada no website, que, apesar de ter sido implementada uma sequência hierárquica de cabeçalhos através dos títulos dos acordeões, essa estrutura não é reconhecida pelos leitores de ecrã:</p>
+<img src="https://github.com/user-attachments/assets/29b74584-4c0b-4a32-a3b6-e442daed939e" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>O título h2 dos acordeões não está a ser identificado pelos leitores de ecrã</em></p>
+<p>Isso acontece porque o cabeçalho se encontra estruturado dentro do botão do acordeão, o que faz com que perca a sua semântica. Por exemplo, na <a href="https://casapia.pt/creche-e-pre-escolar/">página Creche e Pré-escolar</a>  a estrutura HTML mostra que o cabeçalho está dentro da tag button:</p>
+<img src="https://github.com/user-attachments/assets/919b9824-a417-4215-baeb-9f1ad499b1c0" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+
+<p>Recomendamos rever a construção do acordeão para garantir o seu correto funcionamento. Para isso, o botão deve ser estruturado dentro do cabeçalho:</p>
+<img src="https://github.com/user-attachments/assets/a2906197-8e7c-4023-a0d9-ca5c8752718c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Exemplo de construção de um acordeão em que o <code>button</code> está dentro do <code>h3</code> no HTML</em></p>
+<p>Para mais informações partilhamos o <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/">exemplo de construção do acordeão</a> da W3C. Esse problema está relacionado com outra issue e por esse motivo recomendamos corrigirem a issue #33 </p>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/14" target="_blank" rel="noopener noreferrer">issue#14</a> <strong> Existem títulos que não estão sendo atribuídos como cabeçalhos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe uma marcação hierarquizada de títulos e subtítulos na página <code>&lt;h1&gt;...&lt;h6&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n22">ver requisito 2.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Existem páginas em que os subtítulos não estão estruturados como cabeçalhos. Como por exemplo, na página <a href="https://casapia.pt/casa-pia-de-lisboa/premios-e-certificacoes/">Prémios e Certificações</a> os subtítulos &quot;Marca Entidade Empregadora Inclusiva 2025&quot;, &quot;Concurso Escolas com Voz&quot;, &quot;Escola Azul&quot;, &quot;Bandeira Verde Eco-Escolas&quot;, &quot;Selo Escola Saudável 2023-2025&quot; e &quot;Prémio Sonae Educação 2024 – Finalista&quot; não estão estruturados como cabeçalhos:</p>
+<img src="https://github.com/user-attachments/assets/5922b388-45a0-4992-96bd-d9dcba7e8dbd" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Título &quot;Concurso Escolas com Voz&quot; está estruturado como parágrafo no HTML</em></p>
+<hr>
+<p>Na página <a href="https://casapia.pt/educacao-e-formacao/">Educação e Formação</a> os títulos &quot;Equipa de Admissões da Casa Pia de Lisboa&quot; e &quot;Plano Nacional das Artes&quot; não estão estruturados como cabeçalhos:</p>
+<img src="https://github.com/user-attachments/assets/81557fce-d292-4e50-8d46-edde2e0b61dd" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Título &quot;Equipa de Admissões da Casa Pia de Lisboa&quot; está estruturado como parágrafo</em></p>
+<hr>
+<p>Outro exemplo acontece na página <a href="https://casapia.pt/outras-respostas/caci/">CACI</a>, os subtítulos de &quot;Localização&quot; e &quot;Contactos&quot; não estão estruturados como cabeçalhos, para além de estar em falta um título para informar o horário de atendimento:</p>
+<img src="https://github.com/user-attachments/assets/028675b7-c65d-496c-a1c9-d70c799a8f90" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+
+<hr>
+<p>Na página <a href="https://casapia.pt/faq/">Perguntas frequentes (FAQ)</a> os subtítulos dentro de cada acordeão não estão estruturados como cabeçalhos:</p>
+<img src="https://github.com/user-attachments/assets/17e5112d-d32c-49c4-8435-3e11084d8af1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Subtítulos &quot;Como devo proceder para fazer uma candidatura?&quot;, &quot;Quais os Cursos que existem na Casa Pia de Lisboa I. P.?&quot;  e &quot;Como obtenho o documento do Escalão de Abono?&quot; não estão estruturados como cabeçalhos</em></p>
+<p>Recomendamos reverem de modo geral o website, para garantir que os subtítulos dos conteúdos estejam devidamente estruturados como cabeçalhos, respeitando a hierarquia do conteúdo. </p>
+<p>Por exemplo, na página <a href="https://casapia.pt/casa-pia-de-lisboa/premios-e-certificacoes/">Prémios e Certificações</a> os subtítulos &quot;Marca Entidade Empregadora Inclusiva 2025&quot;, &quot;Concurso Escolas com Voz&quot;, &quot;Escola Azul&quot;, &quot;Bandeira Verde Eco-Escolas&quot;, &quot;Selo Escola Saudável 2023-2025&quot; e &quot;Prémio Sonae Educação 2024 – Finalista&quot; devem ser estruturados como h3, uma vez que o título &quot;Prémios&quot; é um h2.</p>
+<p>Na página <a href="https://casapia.pt/educacao-e-formacao/">Educação e Formação</a> o subtítulos &quot;Equipa de Admissões da Casa Pia de Lisboa&quot; e &quot;Plano Nacional das Artes&quot; devem ser estruturados como h2.</p>
+<p>Na página <a href="https://casapia.pt/faq/">Perguntas frequentes (FAQ)</a> devem estruturar os subtítulos que estão dentro de cada acordeão como um cabeçalho h3.</p>
+<p>É necessário rever todas as páginas do website, partilhamos as seguintes páginas identificadas durante a análise:</p>
+<ul>
+<li><a href="https://casapia.pt/cultura/benemeritos/">https://casapia.pt/cultura/benemeritos/</a></li>
+<li><a href="https://casapia.pt/cultura/biblioteca-cesar-da-silva/">https://casapia.pt/cultura/biblioteca-cesar-da-silva/</a></li>
+<li><a href="https://casapia.pt/educacao-nao-formal/educacao-ambiental/">https://casapia.pt/educacao-nao-formal/educacao-ambiental/</a></li>
+<li><a href="https://casapia.pt/outras-respostas/unidade-de-investigacao/">https://casapia.pt/outras-respostas/unidade-de-investigacao/</a></li>
+<li><a href="https://casapia.pt/outras-respostas/centro-de-recursos/">https://casapia.pt/outras-respostas/centro-de-recursos/</a></li>
+<li><a href="https://casapia.pt/outras-respostas/caarpd/">https://casapia.pt/outras-respostas/caarpd/</a></li>
+<li><a href="https://casapia.pt/outras-respostas/caci/">https://casapia.pt/outras-respostas/caci/</a></li>
+<li><a href="https://casapia.pt/educacao-nao-formal/educacao-ambiental/">https://casapia.pt/educacao-nao-formal/educacao-ambiental/</a></li>
+</ul>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/11" target="_blank" rel="noopener noreferrer">issue#11</a> <strong> A hierarquia da marcação de títulos não está a ser respeitada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Existe uma marcação hierarquizada de títulos e subtítulos na página <code>&lt;h1&gt;...&lt;h6&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n22">ver requisito 2.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na <a href="https://casapia.pt/">página inicial Casa Pia</a>, existe um salto do cabeçalho h1 para o h3:</p>
+<img src="https://github.com/user-attachments/assets/84eb0ea0-0314-4a7b-a1ae-0497171fa2f9" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Na página <a href="https://casapia.pt/casa-pia-de-lisboa/organica/">Orgânica</a> existe um salto do cabeçalho h2 para o h4:</p>
+<img src="https://github.com/user-attachments/assets/5dcbd464-57fd-4061-be42-6a9e11619b06" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Recomendamos que:</p>
+<ul>
+<li>Na <a href="https://casapia.pt/">página inicial Casa Pia</a>, é necessário incluir um título h2 &quot;Notícias em destaque&quot; e deve ser estruturado antes do carrossel. Na próxima secção da página, para evitar títulos repetidos, é necessário alterar o título &quot;Notícias em destaque&quot; para &quot;Notícias&quot;.</li>
+<li>Na página <a href="https://casapia.pt/casa-pia-de-lisboa/organica/">Orgânica</a>, os cabeçalhos h4 &quot;Fátima Matos&quot;, &quot;Joaquina Franco&quot; e &quot;Sofia Athayde&quot; devem ser estruturados com cabeçalhos h3</li>
+</ul>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-3.1">Requisito 3.1 - As células que constituem os cabeçalhos da tabela estão marcadas com o elemento &lt;th&gt;</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/12" target="_blank" rel="noopener noreferrer">issue#12</a> <strong>Não foi encontrado tabelas no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.1</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span></div>
+                <div class="issue-content"><blockquote>
+<p>As células que constituem os cabeçalhos da tabela estão marcadas com o elemento <code>&lt;th&gt;</code>.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n31">ver requisito 3.1 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não foi localizado nas páginas da análise o uso de tabelas. Por esse motivo esse critério é considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-3.2">Requisito 3.2 - A legenda da tabela está marcada com o elemento &lt;caption&gt;</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/13" target="_blank" rel="noopener noreferrer">issue#13</a> <strong>Não foi encontrado tabelas no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>A legenda da tabela está marcada com o elemento <code>&lt;caption&gt;</code><br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n32">ver requisito 3.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não foi localizado nas páginas da análise o uso de tabelas. Por esse motivo esse critério é considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-4.1">Requisito 4.1 - Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/17" target="_blank" rel="noopener noreferrer">issue#17</a> <strong>Há formulários que não estão construídos com os elementos HTML corretos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Ao clicar com o rato na etiqueta, o cursor surge no respetivo campo de edição.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n41">ver requisito 4.1 na lista 10 aspetos</a></p>
+</blockquote>
+<p>O campo de pesquisa não possui uma etiqueta associada ao campo:</p>
+<img src="https://github.com/user-attachments/assets/10f26843-e83b-458d-8b17-3b1019171298" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Não é possível identificar a tag label</em></p>
+<p>Recomendamos que os campos de formulário, tenham a respetiva etiqueta estruturada com o elemento label, de forma a que, ao clicar na mesma, o cursor seja automaticamente colocado no seu respectivo campo. A associação entre a etiqueta e o campo é feita através do atributo for na etiqueta label e do atributo id no campo input, os quais devem ter exatamente o mesmo valor. Idealmente a etiqueta deverá estar visível junto ao respectivo campo.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-4.2">Requisito 4.2 - É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/18" target="_blank" rel="noopener noreferrer">issue#18</a> <strong>Não existem campos de preenchimento obrigatório no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.2</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível identificar os campos de preenchimento obrigatório quando se usa apenas um leitor de ecrã.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n42">ver requisito 4.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não identificamos campos de preenchimento obrigatório no website. Por esse motivo o critério está a ser considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-4.3">Requisito 4.3 - É possível localizar e ler as mensagens de erro usando apenas um leitor de ecrã</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/19" target="_blank" rel="noopener noreferrer">issue#19</a> <strong> Não existem campos de preenchimento obrigatório no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>É possível localizar e ler as mensagens de erro usando apenas um leitor de ecrã.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n43">ver requisito 4.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não existem campos de preenchimento obrigatório no website, pelo que não é necessário apresentar qualquer mensagem de erro. Por esse motivo, o critério está a ser considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-5.1">Requisito 5.1 - A imagem ou gráfico tem um equivalente alternativo em texto curto e correto</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/21" target="_blank" rel="noopener noreferrer">issue#21</a> <strong>Existem imagens informativas que não possuem texto alternativo</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.1</span></div>
+                <div class="issue-content"><p>A imagem ou gráfico tem um equivalente em texto curto e correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n51">ver requisito 5.1 na lista 10 aspetos</a></p>
+<p>Na página <a href="https://casapia.pt/outras-respostas/unidade-de-investigacao/">Unidade de Investigação</a>, a informação sobre localização, endereço e contacto está sendo transmitida pelo texto &quot;Localização&quot; e por duas imagens. No entanto, as imagens estão sem texto alternativo:</p>
+<img src="https://github.com/user-attachments/assets/dd06e3dd-b7e1-47c3-b902-3dd7b60ba0de" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Página Unidade de Investigação apresenta 3 informações: localização cujo título está sendo atribuído como um texto, e duas imagens para representar o endereço e contacto do estabelecimento e não possuem texto alternativo</em></p>
+<p>Para além disso, é possível verificar que essas informações estão sendo apresentadas de forma diferente em outros locais do website. Na página <a href="https://casapia.pt/outras-respostas/caci/">CACI</a>, as informações estão sendo descritas por textos (localização, contactos e horário de atendimento):</p>
+<img src="https://github.com/user-attachments/assets/78b01f0b-f635-475c-8c9a-a820562a22d2" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Na página <a href="https://casapia.pt/outras-respostas/centro-de-recursos/#">Centro de Recursos</a>, a informação está sendo transmitida apenas em texto:</p>
+<img src="https://github.com/user-attachments/assets/13056ee1-a9d2-47d9-8fe7-8f4007eafbaf" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Na página <a href="https://casapia.pt/outras-respostas/unidade-de-investigacao/">Unidade de Investigação</a>, pela forma com que as informações estão sendo apresentadas, sem títulos e com uso de imagens, recomendamos que estas tenham um texto alternativo preenchido, como por exemplo, alt=&quot;endereço&quot;, alt=&quot;email&quot;.</p>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/20" target="_blank" rel="noopener noreferrer">issue#20</a> <strong>Existem imagens com texto alternativo inapropriado</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.1</span></div>
+                <div class="issue-content"><p>A imagem ou gráfico tem um equivalente em texto curto e correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n51">ver requisito 5.1 na lista 10 aspetos</a></p>
+<p>Na página <a href="https://casapia.pt/outras-respostas/fab-cpl/">Fab.CPL</a> existe uma imagem cujo texto alternativo está inapropriado pois não transmite uma informação relevante para o utilizador:</p>
+<img src="https://github.com/user-attachments/assets/d7be0fb5-45d2-4616-b0e0-21f10b8b96d2" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Texto alternativo &quot;Círculo do R com eletrodomésticos antigos num balde&quot; é inapropriado pois não transmite informação útil para o utilizador</em></p>
+<p>Recomendamos rever as imagens que tenham texto alternativo para garantir que elas transmitem uma informação útil e que se enquadra no contexto do conteúdo. Nesse exemplo mencionado, uma possível sugestão de texto seria alt=&quot;Etapas de reutilização de um equipamento: revitalizar, reaproveitar, reutilizar e reciclar.&quot;</p>
+<hr>
+<p>Outro exemplo acontece na página<a href="https://casapia.pt/objetivos-de-desenvolvimento-sustentavel-ods/"> Desenvolvimento Sustentável</a> cuja imagens estão sendo descritas pela abreviatura e número &quot;ODS 1, 2, 3, 4, 5, 6, 7, 8, ... , 13&quot;:</p>
+<img src="https://github.com/user-attachments/assets/d646fc9d-12fe-4ca5-99b8-b371dcf069eb" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+
+<p>Recomendamos incluir no texto alternativo de cada imagem a descrição de cada ODS. Por exemplo, &quot;ODS 1: Erradicar a pobreza&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-5.2">Requisito 5.2 - O gráfico é acompanhado de uma descrição longa</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/22" target="_blank" rel="noopener noreferrer">issue#22</a> <strong>Existem imagens sem descrição do conteúdo</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>O gráfico é acompanhado de uma descrição longa.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n52">ver requisito 5.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página <a href="https://casapia.pt/outras-respostas/fab-cpl/">Fab.CPL</a> existem imagens complexas cujo texto alternativo não descreve integralmente o seu conteúdo.</p>
+<p>Por exemplo, a imagem da equipa Fab apresenta como texto alternativo “equipa fab cpl 2025/26”. No entanto, o nome e a função de cada pessoa da equipa são transmitidas exclusivamente de forma visual através da imagem.</p>
+<p>Desta forma, um utilizador que recorra a um leitor de ecrã não consegue aceder à mesma informação, uma vez que esta não se encontra devidamente descrita no texto alternativo.</p>
+<img src="https://github.com/user-attachments/assets/1f2c5441-b71a-4714-88c0-f736ff8f3a7c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Texto alternativo não descreve os nomes e funções de cada pessoa</em></p>
+<p>O mesmo acontece nas imagens apresentadas do calendário e dos espaços:</p>
+<img src="https://github.com/user-attachments/assets/847aa179-6292-4449-bae3-1c2ca6c4aa41" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>O texto alternativo do calendário &quot;horários equipa fab cpl 2025/26&quot; não transmite a informação sobre os horários e disponibilidade de cada pessoa</em></p>
+<img src="https://github.com/user-attachments/assets/21e8fe62-16b4-4be5-b307-e1bc55b02026" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>O texto alternativo das plantas &quot;espaço fab piso 1&quot;  e &quot;espaço fab piso 2&quot; não transmitem a informação do local</em></p>
+<p>Para que o texto alternativo não exceda o limite máximo de 100 caracteres, recomendamos reverem as imagens para garantir que a informação seja apresentada em texto na própria página e que deverá estar próximo a sua respetiva imagem. Para mais informações partilhamos exemplos de como incluir imagens com o seu respectivo conteúdo em texto: <a href="https://www.w3.org/WAI/tutorials/images/complex/#example-2-description-containing-textual-information">https://www.w3.org/WAI/tutorials/images/complex/#example-2-description-containing-textual-information</a></p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-5.3">Requisito 5.3 - As imagens-link têm um equivalente alternativo correto</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/23" target="_blank" rel="noopener noreferrer">issue#23</a> <strong>Existem imagens-link que não possuem um texto alternativo preenchido</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>As imagens-link têm um equivalente alternativo correto.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n53">ver requisito 5.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página de <a href="https://casapia.pt/eventos/">Eventos</a> e <a href="https://casapia.pt/category/agenda/">Notícias</a>, existem imagens-link que não possuem texto alternativo prenchido:</p>
+<img src="https://github.com/user-attachments/assets/ba4bf41f-b270-41cd-b31e-efbfb6a07f13" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Imagem-link representada pelo título &quot;Concerto – Curso Básico de Música&quot; não possui texto alternativo preenchido</em></p>
+<img src="https://github.com/user-attachments/assets/28ed3da7-cce9-424f-933e-d40e612b94cd" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Imagem-link representada pelo título &quot;Casa Pia de Lisboa leva a educação mais longe com o Programa Erasmus+&quot; não possui texto alternativo preenchido</em></p>
+<p>Recomendamos rever as imagens-link para garantir que a imagem tenha um texto alternativo preenchido.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-6.1">Requisito 6.1 - No corpo de um documento, o rácio de contraste entre a cor do texto normal (menor que 18 pontos ou menor que 14 pontos negrito) e a cor do fundo é superior a 4,5:1</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/24" target="_blank" rel="noopener noreferrer">issue#24</a> <strong>O texto normal não tem contraste suficiente</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 6.1</span></div>
+                <div class="issue-content"><p>Na página <a href="https://casapia.pt/formacao-profissional/">Formação Profissional</a> existem textos posicionados em cima das imagens-link que estão com contraste abaixo do recomendado:</p>
+<img src="https://github.com/user-attachments/assets/f79bbeae-b04c-48e1-955a-354589d9c8d1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Texto técnico de desporto praticamente ilegível com a imagem de fundo</em></p>
+<p>Recomendamos que seja incluída um background mais escuro aonde o texto está sendo exibido na imagem. Outra alternativa seria:</p>
+<ul>
+<li>Substituir o texto genérico &quot;Saiba Mais&quot; dos links pelo o texto que está em cima da imagem assim resolve o problema de links genéricos &quot;Saiba mais&quot;.</li>
+<li>Remover o cabeçalho h3 que está atribuído de forma inapropriada.</li>
+<li>A imagem-link direciona o utilizador para o mesmo local que o link &quot;Saiba mais&quot;. Para evitar links duplicados e que remetem para o mesmo local, recomendamos que as imagens sejam estruturadas apenas como imagens, pois já terão o seu respetivo link posicionado abaixo da imagem.</li>
+</ul>
+<img src="https://github.com/user-attachments/assets/9471f3e5-e635-4df6-a783-23ce0a3011f0" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Exemplo de construção que remove problemas de contraste entre as imagens, cabeçalhos inapropriados e links repetitivos</em></p>
+<hr>
+<p>Na <a href="https://casapia.pt/">página inicial</a> e na de <a href="https://casapia.pt/eventos/">Eventos</a> o texto relativo as datas dos eventos possui contraste de 2:1:</p>
+<img src="https://github.com/user-attachments/assets/7114769e-7e3a-45d8-bde0-aa18b47f338a" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Texto da data com contraste de 2:1 na página inicial</em></p>
+<img src="https://github.com/user-attachments/assets/5945ebb7-8d84-4ba9-bc6c-a938eda41773" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Texto da data com contraste de 2:1 na página de eventos</em></p>
+<p>Recomendamos rever os pares de cores #38C3F2 e #FFF e os textos posicionados em cima de imagens, como topo do website e na página <a href="https://casapia.pt/formacao-profissional/">Formação Profissional</a> para garantir que o contraste seja de no mínimo, 4,5:1.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-7.2">Requisito 7.2 - O vídeo ou o áudio deve conter preferencialmente legendas fechadas sincronizadas. Caso não seja possível, no mínimo, deve disponibilizar-se uma transcrição textual</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/27" target="_blank" rel="noopener noreferrer">issue#27</a> <strong>A legenda fornecida pelo vídeo é automática</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 7.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>O vídeo ou áudio deve conter preferencialmente legendas fechadas sincronizadas.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n72">ver requisito 7.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página de <a href="https://casapia.pt/comunicacao-e-media/galeria-de-videos-e-imagens/">Galeria de vídeos e imagens</a>, o vídeo apresentado fornece legendas automáticas e não traduz fielmente o conteúdo que está sendo apresentado pelo vídeo:</p>
+<img src="https://github.com/user-attachments/assets/cc01f1da-2649-49c1-97db-c6ca0609bd38" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>O texto da legenda &quot;...colaboradores bom projeto...&quot; deveria ser &quot;colaboradores erguem um projeto...&quot;</em></p>
+<img src="https://github.com/user-attachments/assets/f63755da-56c7-4841-bb96-f7c04ea99df5" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Ínicio do vídeo apresenta conteúdo em texto com uma música de fundo, no entanto, a legenda automática não informa corretamente</em></p>
+<p>Recomendamos incluir uma legenda no vídeo. Para isso, poderão reaproveitar as legendas geradas automaticamente pelo YouTube, procedendo à sua edição, de forma a criar uma versão final da legenda com o conteúdo fiel ao apresentado. Nessa etapa devem incluir na legenda o conteúdo inicial do vídeo que é apresentado apenas em texto.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-8.3">Requisito 8.3 - Quando se retira a CSS, deve ser possível reconhecer a semântica dos diversos elementos</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/33" target="_blank" rel="noopener noreferrer">issue#33</a> <strong>Os acordeões não estão construídos de forma apropriada (inserir issue)</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 8.3</span></div>
+                <div class="issue-content"><p>Verifica-se que todos os acordeões do website não são identificados quando é utilizada a navegação por títulos. Tal situação ocorre porque, apesar de terem sido aplicados cabeçalhos aos respetivos títulos, eles estão estruturalmente inseridos dentro do botão. Isso faz com que a sua semântica seja anulada, deixando de ser reconhecidos como cabeçalhos pelos mecanismos de navegação do leitor de ecrã:</p>
+<img src="https://github.com/user-attachments/assets/26f9ba5d-cebf-49aa-8979-ff8ff02bce64" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Leitor de ecrã identifica apenas o cabeçalho h1, os títulos que estão estruturados como h2 não são identificados</em></p>
+<img src="https://github.com/user-attachments/assets/b4127f09-1ff5-4150-a080-05b5687c51ec" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Na estrutura HTML verifica-se que o cabeçalho h2 está dentro da tag button</em></p>
+<p>Recomenda-se corrigir todos os acordeões do website para garantir que os leitores de ecrã identifiquem os seus respectivos títulos e permita realizar saltos entre os conteúdos. Para isso, estruturalmente o botão deverá estar dentro do cabeçalho.<br>Para mais informações partilhamos o <a href="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/">exemplo de construção do acordeão</a> da W3C. O problema está relacionado com outras issues, por esse motivo recomendamos reverem a issue #15 </p>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/32" target="_blank" rel="noopener noreferrer">issue#32</a> <strong>Existem conteúdos que não estão estruturados como listas</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 8.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando se retira o CSS, deve ser possível reconhecer a semântica dos diversos elementos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n83">ver requisito 8.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página <a href="https://casapia.pt/outras-respostas/">Outras Respostas</a>, está sendo apresentado um grupo de links que não estão estruturados como listas ul li:</p>
+<img src="https://github.com/user-attachments/assets/82658744-eef3-483f-812d-4585b13d9565" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Links que fazem parte do mesmo grupo de informação não estão sendo estruturados como lista ul li</em></p>
+<p>Na página de <a href="https://casapia.pt/casa-pia-de-lisboa/missao-e-valores/">Missão e Valores</a>, os valores são apresentados visualmente sob a forma de lista. No entanto, na estrutura HTML, não estão estruturados como tal:</p>
+<img src="https://github.com/user-attachments/assets/d0151e7c-ea7e-4dd8-97f5-0f92fea5bd3d" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Uso da tag br e do caractere &quot;-&quot; para estilizar visualmente o conteúdo como uma lista</em></p>
+<p>Na página <a href="https://casapia.pt/creche-e-pre-escolar/">Creche e Pré-escolar</a>, existem grupos de acordeões que não estão estruturados como uma lista ul li. Vale ressaltar que isso está a acontecer em todos os locais em que o acordeão está sendo apresentado:</p>
+<img src="https://github.com/user-attachments/assets/bf0c42b6-184a-447f-90c7-9eeefb8acf62" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Grupo de acordeões não estão agrupados estruturalmente como uma lista ul li</em></p>
+<p>Recomendamos reverem todo o website para garantir que:</p>
+<ul>
+<li>A apresentação visual de uma lista deve ser transmitida também estruturalmente no HTML. Para isso é necessário utilizar as tags ul li. </li>
+<li>Grupos de links e acordeões devem ser estruturados dentro de listas ul li para que seja possível identificar o número de opções disponíveis.</li>
+</ul>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/31" target="_blank" rel="noopener noreferrer">issue#31</a> <strong>Existem conteúdos estruturados como uma lista de forma inapropriada</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 8.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando se retira o CSS, deve ser possível reconhecer a semântica dos diversos elementos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n83">ver requisito 8.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página <a href="https://casapia.pt/transparencia/">Transparência</a>, existem listas que não se encontram corretamente estruturadas. Por exemplo, as ligações “Site institucional” e “Portal de Serviços da Casa Pia de Lisboa” não estão organizadas de forma estruturada dentro de uma lista.<br>Para além disso, verifica-se que a opção da lista “Avisos sobre os procedimentos pré-contratuais mais relevantes:” está estruturada junto com o texto “– as publicações obrigatórias constam do Portal Base dos Contratos Públicos”, quando deveria apresentar-se como uma lista encadeada (sublista), garantindo assim uma organização hierárquica adequada da informação:</p>
+<img src="https://github.com/user-attachments/assets/e23c4b7f-77ee-4112-921f-4663be55dc47" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Recomendamos estruturar as opções “Site institucional” e “Portal de Serviços da Casa Pia de Lisboa” como uma lista. O  texto &quot;– as publicações obrigatórias constam do Portal Base dos Contratos Públicos&quot;, deverá ser uma lista encadeada ul li  que deve estar posicionada estruturalmente a seguir do li &quot;Avisos sobre os procedimentos pré-contratuais mais relevantes:&quot; que faz parte da lista principal.</p>
+</div>
+              </li>
+            
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/30" target="_blank" rel="noopener noreferrer">issue#30</a> <strong>Existem cards estruturados de forma inapropriada no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 8.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando se retira o CSS, deve ser possível reconhecer a semântica dos diversos elementos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n83">ver requisito 8.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Na página de <a href="https://casapia.pt/eventos/">Eventos</a>, foi identificado que cada card contém dois links com o mesmo nome, o que gera redundâncias na navegação:</p>
+<img src="https://github.com/user-attachments/assets/31c776ba-810c-4bef-8675-f8c3af541af4" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Estruturalmente é possível identificar a imagem-link e um cabeçalho h2 link, que direciona o utilizador para o mesmo conteúdo</em></p>
+<p>Recomendamos que para card seja atribuído apenas um link. A área selecionável do card pode ser expandida até o limite do card. Para mais informações podem consultar o guia de boas práticas para estruturar cartões utilizando o <a href="https://getbootstrap.com/docs/5.0/helpers/stretched-link/">método Streched link do Bootstrap</a></p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-9.1">Requisito 9.1 - Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/36" target="_blank" rel="noopener noreferrer">issue#36</a> <strong>Não foi identificado modais no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando a caixa de diálogo é aberta, o foco (cursor do Browser) move-se para um elemento dentro da caixa de diálogo<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n91">ver requisito 9.1 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não foi identificado o uso de modais no website. Por esse motivo, o critério é considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-9.2">Requisito 9.2 - Quando uma caixa de diálogo está aberta, a navegação com teclado (Browser ou Tecnologia de apoio) tem de ficar circunscrita aos elementos que compõem a caixa de diálogo</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/37" target="_blank" rel="noopener noreferrer">issue#37</a> <strong>Não foi identificado modais no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando uma caixa de diálogo está aberta, a navegação com teclado (Browser ou Tecnologia de apoio) tem de ficar circunscrita aos elementos que compõem a caixa de diálogo<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n92">ver requisito 9.2 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não foi identificado o uso de modais no website. Por esse motivo, o critério é considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-9.3">Requisito 9.3 - A caixa de diálogo tem de ter um mecanismo que permita sair ou fechar a caixa, quer através de teclado quer através de um dispositivo apontador</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/38" target="_blank" rel="noopener noreferrer">issue#38</a> <strong>Não foi identificado modais no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>A caixa de diálogo tem de ter um mecanismo que permita sair ou fechar a caixa, quer através de teclado quer através de um dispositivo apontador<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n93">ver requisito 9.3 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não foi identificado o uso de modais no website. Por esse motivo, o critério é considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-chk10-r-9.4">Requisito 9.4 - Quando a caixa de diálogo fecha, o foco (cursor do Browser) deve voltar ao elemento interativo que a invocou</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/39" target="_blank" rel="noopener noreferrer">issue#39</a> <strong>Não foi identificado modais no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk 10 web</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 9.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>Quando a caixa de diálogo fecha, o foco (cursor do Browser) deve voltar ao elemento interativo que a invocou<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-10aspetos#n94">ver requisito 9.4 na lista 10 aspetos</a></p>
+</blockquote>
+<p>Não foi identificado o uso de modais no website. Por esse motivo, o critério é considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+      </div>
+
+      
+      <div class="checklist-section">
+        <h3 id="checklist-conteudo">Checklist Conteúdo</h3>
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        
+    <p><strong>Nível de conformidade:</strong></p>
+    <ul>
+      <li><strong>Checklist Conteúdo</strong>: 37.5% (6/16)
+        <ul>
+          <li>Requisitos avaliados: 17 (1 N/A excluído, 16 aplicáveis)</li>
+          <li>Requisitos OK: 6</li>
+          <li>Requisitos NOK: 10</li>
+          <li>Requisitos N/A: 1</li>
+        </ul>
+      </li>
+    </ul>
+    
+        
+        <h4 class="requirement-title" id="req-conteudo-r-1.1">Requisito 1.1 - O sítio Web apresenta um resumo breve do seu propósito, visível sem se fazer scroll</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/41" target="_blank" rel="noopener noreferrer">issue#41</a> <strong>O propósito do site não é explícito</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>O sítio Web apresenta um resumo breve do seu propósito, visível sem fazer scroll.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n11">ver requisito 1.1 na lista Conteúdo</a></p>
+</blockquote>
+<p>O propósito de um website é diferente da missão ou objetivo da instituição. A página inicial deve incluir uma breve descrição das principais funcionalidades disponíveis no website.</p>
+<img src="https://github.com/user-attachments/assets/607d0a86-a7c7-422f-ba6d-1c7c4c69ece1" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>A frase: &quot;A Casa Pia de Lisboa é um Instituto Público, tutelado pelo Ministério do Trabalho, Solidariedade e Segurança Social&quot; descreve a instituição e não o que é possível encontrar e fazer no website</em></p>
+<p>Recomenda-se que a descrição do propósito seja alterada para representar mais fielmente a finalidade do site e a informação que contém, tal como se verifica no exemplo do site <a href="https://www.acessibilidade.gov.pt/">acessibilidade.gov</a>:</p>
+<img src="https://github.com/user-attachments/assets/a9597725-a05c-46fe-92e3-7267dac09d8e" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Frase: &quot;O sítio para a divulgação, partilha e promoção das melhores práticas de acessibilidade para conteúdos Web e aplicações móveis.&quot; explica que tipo de conteúdo é possível consultar no website da acessibilidade.gov</em></p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-1.2">Requisito 1.2 - Os termos mais complexos têm uma definição agregada</h4>
+      <div class="requirement-content">
+        <p><span class="status-na"><span class="sr-only">etiqueta: </span>N/A</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/42" target="_blank" rel="noopener noreferrer">issue#42</a> <strong>Não existe termos complexos no website</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.2</span><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os termos mais complexos têm uma definição agregada.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n12">ver requisito 1.2 na lista Conteúdo</a></p>
+</blockquote>
+<p>Não foi localizado termos complexos no website da Casa Pia. Por esse motivo, o critério será considerado como &quot;Não aplicável&quot;.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-1.3">Requisito 1.3 - Cada bloco de conteúdo contém a sua data de atualização</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/43" target="_blank" rel="noopener noreferrer">issue#43</a> <strong>Existem páginas sem data de atualização</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Cada bloco de conteúdo contém a sua data de atualização.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n13">ver requisito 1.3 na lista Conteúdo</a></p>
+</blockquote>
+<p>A página de <a href="https://casapia.pt/contactos/">Contactos</a>, <a href="https://casapia.pt/comunicacao-e-media/imprensa/">Imprensa</a> e <a href="https://casapia.pt/comunicacao-e-media/publicacoes/">Publicações</a> não possuem data de atualização, pelo que deve ser corrigido:</p>
+<img src="https://github.com/user-attachments/assets/f4f5736e-c555-4602-999a-e3d2cf7fc82d" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Página de contactos sem data de atualização</em></p>
+<p>Recomendamos que todas as páginas de conteúdos tenham a sua respectiva data de atualização.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-1.4">Requisito 1.4 - A informação sobre a entidade responsável pelo conteúdo está em todas as páginas</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/44" target="_blank" rel="noopener noreferrer">issue#44</a> <strong>Não há referência à entidade responsável pelos conteúdos</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 1.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>A informação sobre a entidade responsável pelo conteúdo está em todas as páginas.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n14">ver requisito 1.4 na lista Conteúdo</a></p>
+</blockquote>
+<p>Não foi encontrado o nome da entidade responsável pelo conteúdo nas páginas ou no rodapé do website:</p>
+<img src="https://github.com/user-attachments/assets/b89bcd2d-bf69-4a21-9266-b3c5dd665e63" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Não é possível identificar o responsável pelo conteúdo do website</em></p>
+<p>Recomendamos incluir no rodapé o nome da entidade responsável pelo conteúdo do website. Por exemplo, caso o responsável pelo conteúdo do website seja a própria Casa Pia, poderá ser inserido no rodapé do website a informação de copyright: &quot;© 2026 Casa Pia – Todos os direitos reservados.&quot;</p>
+<img src="https://github.com/user-attachments/assets/153d5431-1c5e-4859-a487-300616f159f2" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Exemplo de como incluir a informação sobre o responsável pelo conteúdo do website</em></p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-2.2">Requisito 2.2 - A informação secundária (datas, autores) utiliza, no mínimo, um tamanho de letra de 10 pontos</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/46" target="_blank" rel="noopener noreferrer">issue#46</a> <strong>A informação secundária tem um tamanho de letra inferior a 10pt (equivalente a 13.3px)</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>A informação secundária (datas, autores) utiliza, no mínimo, um tamanho de letra de 10 pontos.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n22">ver requisito 2.2 na lista Conteúdo</a></p>
+</blockquote>
+<p>O tamanho de letra do link &quot;Portal de serviços&quot; é de 12px, pelo que deverá ser corrigido para um tamanho igual ou superior a 10pt (13.3px):</p>
+<img src="https://github.com/user-attachments/assets/2a55db44-861c-45e2-bcb2-22ae34402e21" alt="" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>O tamanhos dos links e dos textos que estão sendo apresentados no rodapé é de 12.8px, pelo que deverá ser corrigido para um tamanho igual ou superior a 10pt (13.3px): </p>
+<img src="https://github.com/user-attachments/assets/c1767ed0-a5c1-4321-b4a2-d7a9bf5e2d49" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Recomendamos rever o conteúdo considerado como secundário, para garantir que tenham um tamanho, de no mínimo, 13.3px.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-2.3">Requisito 2.3 - Blocos e linhas de texto com largura não superior a 100 caracteres</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/47" target="_blank" rel="noopener noreferrer">issue#47</a> <strong> Existem blocos de texto com mais de 100 caracteres por linha</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.3</span></div>
+                <div class="issue-content"><blockquote>
+<p>Blocos e linhas de texto com largura não superior a 100 caracteres.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n23">ver requisito 2.3 na lista Conteúdo</a></p>
+</blockquote>
+<p>Na página acessibilidade o tamanho da linha do bloco de texto é de 136 caracteres:</p>
+<img src="https://github.com/user-attachments/assets/b96580b4-a02e-4202-8904-d0e90443074b" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Recomendamos a revisão de todas as páginas do website, de forma a garantir que as linhas de texto não ultrapassem os 80 caracteres (incluindo espaços). Para o efeito, deverá ser definida uma largura máxima para as caixas de texto (propriedade max-width, em CSS), utilizando unidades relativas ao tamanho da fonte (como em ou rem), assegurando assim que não seja excedido o número máximo de caracteres por linha.<br>No limite, podem ir até aos 100 caracteres (incluindo espaços). Essa verificação deve ser feita também nos conteúdos que estão sendo apresentados dentro de acordeões.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-2.4">Requisito 2.4 - O espaçamento entre linhas não é inferior a 1.5x o tamanho da letra</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/48" target="_blank" rel="noopener noreferrer">issue#48</a> <strong> O espaçamento entre linhas está acima do recomendado</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 2.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>O espaçamento entre linhas não é inferior a 1.5x o tamanho da letra.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n24">ver requisito 2.4 na lista Conteúdo</a></p>
+</blockquote>
+<p>O espaçamento entre linhas do conteúdo está 1,5x o tamanho da fonte. O critério está a cumprir:</p>
+<img src="https://github.com/user-attachments/assets/a703064d-8f76-48bc-8347-07f02112681b" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Tamanho de texto de 16px possui espaçamento entre linhas de 24px</em></p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-3.1">Requisito 3.1 - Nenhum nível de navegação tem mais de 9 opções</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/49" target="_blank" rel="noopener noreferrer">issue#49</a> <strong>O menu ultrapassa 9 opções nas subopções de Casa pia Lisboa</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 3.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Nenhum nível de navegação tem mais de 9 opções.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n31">ver requisito 3.1 na lista Conteúdo</a></p>
+</blockquote>
+<p>A opção &quot;Casa Pia de Lisboa&quot; do menu possui 10 subopções, pelo que está acima do recomendado:</p>
+<img src="https://github.com/user-attachments/assets/f85dd88b-19e8-43f9-b851-af292c73eef4" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+
+
+<p>Deve ser feita uma revisão da arquitetura de informação do menu de forma a garantir que não ultrapasse 9 opções em cada nível do menu.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-4.1">Requisito 4.1 - Os documentos longos têm um índice no topo com hiperligações internas para o mesmo</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/52" target="_blank" rel="noopener noreferrer">issue#52</a> <strong> O índice está a ser substituído por acordeões que não estão estruturados corretamente (inseririssues)</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.1</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os documentos longos têm um índice no topo com hiperligações internas para o mesmo.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n41">ver requisito 4.1 na lista Conteúdo</a></p>
+</blockquote>
+<p>O uso de acordeões como substituição de um índice é uma solução válida, mas é importante ter em consideração alguns aspetos essenciais para garantir a acessibilidade. A estrutura do acordeão deve ser construída de forma adequada, assegurando que funcione sem problemas para todos os utilizadores, incluindo aqueles que utilizam tecnologias de apoio.</p>
+<p>Existem acordeões no website que não estão estruturados corretamente e que devem ser corrigidos pois os títulos não estão a ser identificados pelas tecnologias de apoio:</p>
+<img src="https://github.com/user-attachments/assets/29b74584-4c0b-4a32-a3b6-e442daed939e" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>O título h2 dos acordeões não está a ser identificado pelos leitores de ecrã</em></p>
+<p> Para mais informações recomendamos corrigirem as issues xx e xx.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-4.2">Requisito 4.2 - O layout do sítio Web é adaptável a plataformas móveis sem necessidade de efetuar varrimento horizontal</h4>
+      <div class="requirement-content">
+        <p><span class="status-ok"><span class="sr-only">etiqueta: </span>OK</span> (no entanto contém 1 melhoria que se recomenda efetuar)</p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/53" target="_blank" rel="noopener noreferrer">issue#53</a> <strong>Não está sendo apresentado scroll horizontal quando o conteúdo é visto em diferentes resoluções</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 4.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>O layout do sítio Web é adaptável a plataformas móveis sem necessidade de efetuar varrimento horizontal.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n42">ver requisito 4.2 na lista Conteúdo</a></p>
+</blockquote>
+<p>Em diferentes resoluções o conteúdo se adapta não exibindo o scroll horizontal. No entanto, vale ressaltar que existem conteúdos que embora não apresentem o scroll horizontal eles estão com a largura dos textos muito pequena para a resolução apresentada, como por exemplo, o mobile:</p>
+<img src="https://github.com/user-attachments/assets/900c0da3-311d-4e40-ad4d-3a828feb81fe" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Bloco de texto muito pequeno sendo que ha espaço nas laterais</em></p>
+<p>Recomendamos sempre ter um espaço entre as laterais para permitir uma leitura adequada do conteúdo, no entanto, esse espaço deve ser pequeno para não reduzir a área de apresentação do texto.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-5.2">Requisito 5.2 - Os elementos interativos têm uma dimensão mínima de 44px CSS (44 pontos) (vertical e horizontal)</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/55" target="_blank" rel="noopener noreferrer">issue#55</a> <strong>Existem elementos interativos com área clicável que não cumprem a dimensão mínima exigida (44px de altura e largura)</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.2</span></div>
+                <div class="issue-content"><blockquote>
+<p>Os elementos interativos têm uma dimensão mínima de 44px CSS (44 pontos), vertical e horizontal.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n52">ver requisito 5.2 na lista Conteúdo</a></p>
+</blockquote>
+<p>Existem elementos interativos com com tamanho abaixo do recomendado:</p>
+<img src="https://github.com/user-attachments/assets/aef29c66-8ec5-4dbb-80f2-addf6c5f5838" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Controles do carrosel com 10px de altura e largura na página inicial do website</em></p>
+<img src="https://github.com/user-attachments/assets/68048c71-43b3-49a4-98f8-ab141b5a313c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Botão de pesquisa com 27,63 de altura e 37,81 de largura apresentado no topo do website</em></p>
+<img src="https://github.com/user-attachments/assets/6472c8d0-05fd-4737-94f3-f03b73e79c3c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Redes sociais com 25,28px de altura e 12px de largura nas páginas internas de notícias e eventos</em></p>
+<img src="https://github.com/user-attachments/assets/e773695d-76d9-493b-a7c7-86834aedf206" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Redes sociais com 25,28px de altura e 12px de largura de largura no rodapé do website</em></p>
+<p>Devem garantir que os elementos interativos têm uma altura e largura igual ou superior a 44px de área clicável, mesmo que o ícone/imagem tenha um tamanho inferior.</p>
+</div>
+              </li>
+            </ul></div>
+        <h4 class="requirement-title" id="req-conteudo-r-5.4">Requisito 5.4 - Elementos gráficos interativos têm de aparentar ser clicáveis</h4>
+      <div class="requirement-content">
+        <p><span class="status-nok"><span class="sr-only">etiqueta: </span>NOK</span></p>
+        <p>Lista de evidências recolhidas:</p>
+    <ul class="evidence-list">
+              <li class="evidence-item">
+                <p><span class="visually-hidden">evidência: </span><a href="https://github.com/unidade-acesso/report_018/issues/57" target="_blank" rel="noopener noreferrer">issue#57</a> <strong> Existem elementos interativos que não possuem contraste</strong></p>
+                <div class="evidence-labels"><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span><span class="label-tag label-requisito"><span class="sr-only">etiqueta: </span>R 5.4</span></div>
+                <div class="issue-content"><blockquote>
+<p>Elementos gráficos interativos têm de aparentar ser clicáveis.<br>– <a href="https://amagovpt.github.io/kit-selo/checklists/checklist-conteudo#n54">ver requisito 5.4 na lista Conteúdo</a></p>
+</blockquote>
+<p>Há elementos interativos no website com pouco contraste. Por exemplo, os controles do carrossel da página inicial, a sua cor tem um contraste abaixo de 3:1:</p>
+<img src="https://github.com/user-attachments/assets/36acb4eb-4c38-445e-bd4c-5f7a2d86ceb4" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Controles do carrossel com contraste de 1,4:1 com a cor de fundo branca</em></p>
+<p>O menu lateral da página inicial também possui constraste abaixo do recomendado:</p>
+<img src="https://github.com/user-attachments/assets/e1b24f5f-0031-42fc-b329-183f9deb9e9c" alt="Image" class="evidence-image" style="max-width: 100%; height: auto; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;">
+
+<p><em>Botões no menu lateral com contraste de 2:1 com a cor de fundo branca</em></p>
+<p>Recomendamos a revisão das cores dos vários estados dos elementos para garantir os valores mínimos de contraste em elementos interativos, principalmente nos pares de cores #38C3F2 (azul-claro) com #FFFFFF (branco) e  #D4DAEB (azul-acizentado) com #FFFFFF (branco).</p>
+</div>
+              </li>
+            </ul></div>
+      </div>
+
+      
+      
+      
+    </section>
+
+
+
+         
+
+         <section id="etiquetas" class="mb-5 report-section">
+       <h2 id="req-etiquetas">Significado das etiquetas utilizadas</h2>
+      <ul>
+                                   <li><span class="label-tag label-ok"><span class="sr-only">etiqueta: </span>OK</span> - status OK</li>
+                                   <li><span class="label-tag label-melhoria"><span class="sr-only">etiqueta: </span>melhoria</span> - status OK, mas pode melhorar</li>
+                                   <li><span class="label-tag label-nok"><span class="sr-only">etiqueta: </span>NOK</span> - status Not OK</li>
+                                   <li><span class="label-tag label-na"><span class="sr-only">etiqueta: </span>N/A</span> - status Não Aplicável</li>
+                                   <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk10 web</span> - checklist 10 Aspetos críticos de acessibilidade funcional</li>
+                                   <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk conteúdo</span> - checklist Conteúdo</li>
+                                   <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>chk transação</span> - checklist Transação</li>
+                                   <li><span class="label-tag label-outras"><span class="sr-only">etiqueta: </span>outras violações</span> - permite construir o subcapítulo "Outras violações", o qual integra o capítulo "Avaliações manuais"</li>
+                                   <li><span class="label-tag label-declaracao"><span class="sr-only">etiqueta: </span>dec a11y</span> - permite construir o capítulo "Declaração de acessibilidade e usabilidade"</li>
+                                   <li><span class="label-tag label-auto"><span class="sr-only">etiqueta: </span>av auto</span> - permite construir o capítulo "Avaliação automática"</li>
+                                   <li><span class="label-tag label-checklist"><span class="sr-only">etiqueta: </span>testes usabilidade</span> - permite construir o capítulo "Testes de usabilidade"</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <footer class="mt-5 pt-4 border-top text-center text-muted">
+    <div class="container">
+      <p>© 2026 ARTE - Agência para a Reforma Tecnológica do Estado, I.P. Todos os Direitos Reservados.</p>
+      <p><em lang="en">GitReports v1.0</em> - relatório gerado automaticamente a partir dos <em lang="en">issues</em> do GitHub</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

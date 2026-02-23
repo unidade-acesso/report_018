@@ -20,6 +20,6 @@ Consulte aqui a última atualização: [Relatório da Casa Pia](23022026_report_
 <details>
   <summary>Histórico de atualizações</summary>
   <ul aria-label="lista de relatórios já efetuados">
-    <li><a href="ddmmaaaa_report.html">(dd/mm/aaaa). Relatório do {{ page.website }}</a></li>
+    <li><a href="23022026_report_018.html">(23/02/2026). Relatório do Casa Pia</a></li>
   </ul>
 </details>
